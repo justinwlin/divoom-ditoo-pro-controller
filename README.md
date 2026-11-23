@@ -3,6 +3,25 @@
 A CLI tool to control a Divoom Ditoo Pro over Bluetooth (SPP/RFCOMM or BLE GATT) or USB (custom firmware 306019+).
 The original app from the vendor is proprietary; this project reverse-engineers the protocol.
 
+# This fork: macOS
+
+This fork of [futpib/divoom-ditoo-pro-controller](https://github.com/futpib/divoom-ditoo-pro-controller) runs on macOS over BLE, with stock firmware.
+It adds named SD card sounds, widgets, pixel art, and an MCP server for AI agents.
+
+```sh
+brew install pkgconf fontconfig mpv
+LIBRARY_PATH="$(brew --prefix)/lib" cargo build --release
+cp target/release/divoom-ditoo-pro-controller ~/.local/bin/
+divoom-ditoo-pro-controller volume get
+claude mcp add ditoo -s user -- ~/.local/bin/divoom-ditoo-pro-controller mcp \
+  --pack "$PWD/soundpack" --art "$PWD/art"
+```
+
+- macOS details: [docs/macos.md](docs/macos.md)
+- SD card sounds and your own songs: [docs/sd-card-sound.md](docs/sd-card-sound.md)
+- MCP tools: [docs/mcp.md](docs/mcp.md)
+- Art gallery: <https://justinwlin.github.io/divoom-ditoo-pro-controller/>
+
 # Features
 
 - **Display**: send images (PNG, JPEG, GIF, BMP, WebP), animations (Divoom 16x16 format), video (anything mpv can play, including YouTube URLs)
