@@ -67,7 +67,11 @@ class Ditoo:
 
 async def main():
     args = sys.argv[1:]
-    pack = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "manifest.json")))
+    here = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+    pack = json.load(open(os.path.join(here, "manifest.json")))
+    local = os.path.join(here, "manifest.local.json")  # your own extra tracks, not in git
+    if os.path.exists(local):
+        pack["sounds"] += json.load(open(local))["sounds"]
     sounds = {s["name"]: s for s in pack["sounds"]}
     if not args or args[0] == "--list":
         print("\n".join(f'{s["id"]:4d}  {s["name"]:22s} {s["category"]:12s} {s["text"]}' for s in pack["sounds"]))
