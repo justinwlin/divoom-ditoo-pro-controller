@@ -4,7 +4,7 @@ use std::error::Error;
 use std::fs::File;
 use std::io::{BufReader, BufWriter};
 use std::path::PathBuf;
-use bluer::Address;
+use divoom_ditoo_pro_controller::Address;
 use chrono::NaiveDateTime;
 use clap::{Parser, Subcommand};
 use env_logger::{Builder, Env};
@@ -42,6 +42,10 @@ pub struct Args {
   /// USB physical port (e.g. 1-6); automatic when one Ditoo is attached
   #[arg(long, global = true)]
   usb_port: Option<String>,
+
+  /// Part of the BLE device name, for platforms that hide the address (macOS). Default: DitooPro-Light
+  #[arg(long, global = true)]
+  name: Option<String>,
 
   #[command(subcommand)]
   command: Command
@@ -450,8 +454,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
   let args = Args::parse();
 
-  divoom_ditoo_pro_controller::with_usb_port(args.usb_port.clone(),
-    divoom_ditoo_pro_controller::with_transport(args.transport, run(args))).await
+  divoom_ditoo_pro_controller::with_device_name(args.name.clone(),
+    divoom_ditoo_pro_controller::with_usb_port(args.usb_port.clone(),
+      divoom_ditoo_pro_controller::with_transport(args.transport, run(args)))).await
 }
 
 async fn run(args: Args) -> Result<(), Box<dyn Error>> {

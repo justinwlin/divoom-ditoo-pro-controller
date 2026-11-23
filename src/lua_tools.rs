@@ -4,7 +4,7 @@ use crate::{
   protocol::packet::Response,
   transport::DeviceConnection,
 };
-use bluer::Address;
+use crate::Address;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::{

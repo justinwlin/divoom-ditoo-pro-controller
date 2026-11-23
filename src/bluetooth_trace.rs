@@ -6,7 +6,7 @@ use crate::{
   },
   transport::DeviceConnection,
 };
-use bluer::Address;
+use crate::Address;
 use serde_json::{json, Value};
 use std::{
   error::Error,

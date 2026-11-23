@@ -6,7 +6,7 @@ use crate::{
   },
   transport::DeviceConnection,
 };
-use bluer::Address;
+use crate::Address;
 use serde_json::json;
 use sha2::{Digest, Sha256};
 use std::{collections::VecDeque, error::Error, path::Path, time::Duration};
