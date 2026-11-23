@@ -40,6 +40,19 @@ Use it to give a program a voice: a build tool, an AI agent, or a timer can say 
 
 ## Play
 
+With the Rust tool (run it in the repository folder, or set `DITOO_SOUNDPACK` to the `soundpack` folder):
+
+```sh
+divoom-ditoo-pro-controller sound list --category event
+divoom-ditoo-pro-controller sound play j_done e01_build_finished
+divoom-ditoo-pro-controller sound play w_timer n25 w_minutes w_left
+divoom-ditoo-pro-controller sound loop a_rain
+divoom-ditoo-pro-controller sound stop
+divoom-ditoo-pro-controller sound status
+```
+
+With the Python script, which needs no build:
+
 ```sh
 cd soundpack/tools
 uv run --with bleak ditoo_play.py --list

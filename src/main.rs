@@ -193,6 +193,15 @@ enum Command {
     action: VolumeCommand
   },
 
+  /// Play sounds from an SD card soundpack by name (see docs/sd-card-sound.md)
+  Sound {
+    /// Soundpack folder with manifest.json (default: $DITOO_SOUNDPACK, then ./soundpack)
+    #[arg(long, global = true)]
+    pack: Option<std::path::PathBuf>,
+    #[command(subcommand)]
+    action: SoundCommand
+  },
+
   /// Start playback
   Play,
 
@@ -246,6 +255,27 @@ enum BluetoothCommand {
     #[arg(long, default_value_t=200, value_parser=clap::value_parser!(u64).range(50..=5000))]
     interval_ms: u64,
   },
+}
+
+#[derive(Subcommand, Debug)]
+enum SoundCommand {
+  /// List the sounds in the pack
+  List {
+    /// Show one category only (for example event, number, jingle)
+    #[arg(long)]
+    category: Option<String>
+  },
+  /// Play one or more sounds in sequence, one time each
+  Play {
+    #[arg(required = true)]
+    names: Vec<String>
+  },
+  /// Start a sound in repeat mode and leave it on
+  Loop { name: String },
+  /// Pause playback
+  Stop,
+  /// Print the card playback status as JSON
+  Status,
 }
 
 #[derive(Subcommand, Debug)]
@@ -691,6 +721,37 @@ async fn run(args: Args) -> Result<(), Box<dyn Error>> {
 
       };
       send_set_box_mode(mac, payload).await?
+    }
+    Command::Sound { pack, action } => {
+      use divoom_ditoo_pro_controller::sound;
+      let dir = sound::pack_dir(pack);
+      match action {
+        SoundCommand::List { category } => {
+          for s in sound::Pack::load(&dir)?.sounds.iter().filter(|s| category.as_deref().is_none_or(|c| s.category == c)) {
+            println!("{:4}  {:24} {:12} {}", s.id, s.name, s.category, s.text);
+          }
+        }
+        SoundCommand::Play { names } => {
+          let pack = sound::Pack::load(&dir)?;
+          let sounds = names.iter().map(|n| pack.find(n).cloned()).collect::<Result<Vec<_>, _>>()?;
+          let mac = resolve_device(args.device).await?;
+          sound::play(mac, &sounds).await?
+        }
+        SoundCommand::Loop { name } => {
+          let pack = sound::Pack::load(&dir)?;
+          let sound = pack.find(&name)?.clone();
+          let mac = resolve_device(args.device).await?;
+          sound::start_loop(mac, &sound).await?
+        }
+        SoundCommand::Stop => {
+          let mac = resolve_device(args.device).await?;
+          sound::stop(mac).await?
+        }
+        SoundCommand::Status => {
+          let mac = resolve_device(args.device).await?;
+          println!("{}", serde_json::to_string(&sound::status(mac).await?)?);
+        }
+      }
     }
     Command::Volume { action } => {
       let mac = resolve_device(args.device).await?;

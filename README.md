@@ -213,6 +213,12 @@ The [soundpack](soundpack/README.md) has 257 short sounds for the microSD slot (
 jingles, ambient loops) and a script that plays a sound by name over BLE, with no audio pairing. See
 [how SD card sound works](docs/sd-card-sound.md) for the test results and for how to add your own music.
 
+```bash
+divoom-ditoo-pro-controller sound list
+divoom-ditoo-pro-controller sound play j_done e01_build_finished
+divoom-ditoo-pro-controller sound stop
+```
+
 # Bluetooth adapter
 
 Please note the Bluetooth adapter is chosen automatically.
