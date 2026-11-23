@@ -4,13 +4,18 @@ The tool builds and runs on macOS. It uses BLE through the `btleplug` crate, bec
 
 ## Build
 
+Without scrolling text and video (no extra libraries):
+
 ```sh
 cargo build --release --no-default-features
 ```
 
-`--no-default-features` leaves out scrolling text (needs fontconfig) and video (needs libmpv). To include them,
-install the libraries (for example with Homebrew) and build with the default features. That build is not tested
-on macOS yet.
+With all features, install the libraries with Homebrew and give the linker the Homebrew folder:
+
+```sh
+brew install pkgconf fontconfig mpv
+LIBRARY_PATH="$(brew --prefix)/lib" cargo build --release
+```
 
 ## Use
 
@@ -46,8 +51,10 @@ One Ditoo Pro with stock firmware 306007, from macOS on Apple silicon:
 | `brightness 100` | Acknowledged, and `status` then reported brightness 100. |
 | `animation FILE` | A 5-packet animation was acknowledged and shown. |
 | `status` | Returned the decoded reply. |
+| `static-text "Hi"` | 2 packets acknowledged. |
+| `scrolling-text "Hello from the Mac"` | 196 frames acknowledged in about 80 seconds. |
 
-Not tested on macOS: text, video, firmware update, Lua commands, and USB.
+Not tested on macOS: video, firmware update, Lua commands, and USB.
 
 ## Code layout
 

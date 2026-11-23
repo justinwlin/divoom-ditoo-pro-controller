@@ -35,8 +35,8 @@ cargo install --path .
 
 ### macOS
 
-The tool also runs on macOS over BLE. Build with `cargo build --release --no-default-features`. The device is
-selected by its BLE name (`--name`), because macOS hides the Bluetooth address. See [macOS](docs/macos.md).
+The tool also runs on macOS over BLE. The device is selected by its BLE name (`--name`), because macOS hides the
+Bluetooth address. See [macOS](docs/macos.md) for the build steps and the test results.
 
 ### Feature flags
 
