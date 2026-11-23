@@ -72,8 +72,8 @@ format as `manifest.json`. Git ignores that file.
 
 ## Limits
 
-- Tested on one Ditoo Pro with stock firmware, from macOS, with a 6-file test card: select, pause, status and
-  play modes. The 257-file card and `ditoo_play.py` in this form are not yet tested on hardware.
+- Tested on one Ditoo Pro with stock firmware, from macOS. The full card and `ditoo_play.py` passed a hardware test:
+  a jingle with an event line, a 4-word sequence, and a longer track each played and then stopped.
 - A sequence of words has a short gap between the words, because each word is a separate track.
 - Each script run needs 2 to 3 seconds to connect. A program that keeps the BLE connection open has no such delay.
 - New sounds must go at the end of the card, or the IDs in the manifest change.
