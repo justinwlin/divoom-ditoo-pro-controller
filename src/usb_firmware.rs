@@ -1,6 +1,6 @@
 //! MVsilicon USB bootloader protocol traced in the pinned Ditoo 306007 image.
 use crate::{firmware::Image, transport::DeviceConnection, with_transport, Transport};
-use bluer::Address;
+use crate::Address;
 use futures::future::try_join_all;
 use nusb::{
   transfer::{ControlIn, ControlOut, ControlType, Recipient, TransferError},

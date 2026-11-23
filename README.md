@@ -33,6 +33,11 @@ https://aur.archlinux.org/packages/divoom-ditoo-pro-controller-git
 cargo install --path .
 ```
 
+### macOS
+
+The tool also runs on macOS over BLE. Build with `cargo build --release --no-default-features`. The device is
+selected by its BLE name (`--name`), because macOS hides the Bluetooth address. See [macOS](docs/macos.md).
+
 ### Feature flags
 
 | Feature | Default | Description |
