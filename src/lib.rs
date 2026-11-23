@@ -50,6 +50,8 @@ pub mod lua_tools;
 pub mod lua_bundle;
 pub mod sound;
 pub mod canvas;
+pub mod art;
+pub mod mcp;
 pub use transport::{Transport, selected_device_name, selected_transport, with_device_name, with_transport, with_usb_port};
 mod usb_control;
 use transport::DeviceConnection;

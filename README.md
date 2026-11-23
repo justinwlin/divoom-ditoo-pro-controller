@@ -207,6 +207,11 @@ divoom-ditoo-pro-controller convert to-divoom16 ./images/witch.gif ./out.divoom1
 divoom-ditoo-pro-controller debug-image ./images/witch.divoom16
 ```
 
+# AI agents (MCP)
+
+`divoom-ditoo-pro-controller mcp` is a Model Context Protocol server with 14 tools for the display and the
+speaker. See [MCP server](docs/mcp.md).
+
 # Widgets and art
 
 Small text with a built-in 3x5 font (no font library), and animations by name from the [art](art/README.md) folder:

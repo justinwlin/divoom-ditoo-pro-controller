@@ -208,6 +208,16 @@ enum Command {
     action: ArtCommand
   },
 
+  /// Run a Model Context Protocol server on stdin/stdout, so an AI agent can use the device
+  Mcp {
+    /// Soundpack folder (default: $DITOO_SOUNDPACK, then ./soundpack)
+    #[arg(long)]
+    pack: Option<std::path::PathBuf>,
+    /// Art folder (default: $DITOO_ART, then ./art)
+    #[arg(long)]
+    art: Option<std::path::PathBuf>
+  },
+
   /// Play sounds from an SD card soundpack by name (see docs/sd-card-sound.md)
   Sound {
     /// Soundpack folder with manifest.json (default: $DITOO_SOUNDPACK, then ./soundpack)
@@ -808,36 +818,25 @@ async fn run(args: Args) -> Result<(), Box<dyn Error>> {
       divoom_ditoo_pro_controller::send_canvas(mac, &canvas).await?
     }
     Command::Art { art, action } => {
-      let dir = art
-        .or_else(|| std::env::var_os("DITOO_ART").map(std::path::PathBuf::from))
-        .unwrap_or_else(|| std::path::PathBuf::from("art"));
-      let mut files = std::fs::read_dir(&dir)
-        .map_err(|e| format!("Art folder {}: {e}. Use --art DIR or set DITOO_ART.", dir.display()))?
-        .filter_map(|entry| entry.ok().map(|e| e.path()))
-        .filter(|p| matches!(p.extension().and_then(|e| e.to_str()), Some("divoom16" | "gif" | "png")))
-        .collect::<Vec<_>>();
-      files.sort();
+      use divoom_ditoo_pro_controller::art as art_folder;
+      let dir = art_folder::art_dir(art);
       match action {
         ArtCommand::List => {
-          for path in &files {
-            if let Some(name) = path.file_stem().and_then(|s| s.to_str()) {
-              println!("{name}");
-            }
+          for name in art_folder::names(&dir)? {
+            println!("{name}");
           }
         }
-        ArtCommand::Show { art_name: name } => {
-          let path = files
-            .iter()
-            .find(|p| p.file_stem().and_then(|s| s.to_str()) == Some(name.as_str()))
-            .ok_or_else(|| format!("No art named \"{name}\" in {}. Use `art list`.", dir.display()))?;
+        ArtCommand::Show { art_name } => {
+          art_folder::find(&dir, &art_name)?;
           let mac = resolve_device(args.device).await?;
-          if path.extension().and_then(|e| e.to_str()) == Some("divoom16") {
-            send_divoom_animation(mac, &mut File::open(path)?).await?
-          } else {
-            send_image(mac, &path.to_string_lossy()).await?
-          }
+          art_folder::show(mac, &dir, &art_name).await?
         }
       }
+    }
+    Command::Mcp { pack, art } => {
+      use divoom_ditoo_pro_controller::{art as art_folder, mcp, sound};
+      let address = resolve_device(args.device).await?;
+      mcp::serve(mcp::Config { address, pack: sound::pack_dir(pack), art: art_folder::art_dir(art) }).await?
     }
     Command::Sound { pack, action } => {
       use divoom_ditoo_pro_controller::sound;
