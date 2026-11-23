@@ -1,0 +1,251 @@
+e01_build_finished	Your build is finished.
+e02_build_failed	Heads up, the build failed.
+e03_tests_passed	All tests passed.
+e04_tests_failed	Some tests failed.
+e05_pr_ready	Your pull request is ready for review.
+e06_pr_merged	Pull request merged.
+e07_deploy_done	Deploy complete.
+e08_deploy_failed	The deploy failed.
+e09_need_input	I need your input.
+e10_question	I have a question for you.
+e11_task_done	Task complete.
+e12_agent_done	Your agent is done.
+e13_agent_stuck	An agent is stuck and needs help.
+e14_new_message	You have a new message.
+e15_meeting_soon	You have a meeting in five minutes.
+e16_timer_done	Time's up!
+e17_timer_started	Timer started.
+e18_break_time	Time for a break.
+e19_stretch	Stand up and stretch.
+e20_water	Drink some water.
+e21_lunch	It's lunch time.
+e22_back_to_work	Okay, back to work.
+e23_long_day	You've been at it for a while. Nice work.
+e24_low_battery	My battery is low.
+e25_error	Something went wrong.
+n00	Zero.
+n01	One.
+n02	Two.
+n03	Three.
+n04	Four.
+n05	Five.
+n06	Six.
+n07	Seven.
+n08	Eight.
+n09	Nine.
+n10	Ten.
+n11	Eleven.
+n12	Twelve.
+n13	Thirteen.
+n14	Fourteen.
+n15	Fifteen.
+n16	Sixteen.
+n17	Seventeen.
+n18	Eighteen.
+n19	Nineteen.
+n20	Twenty.
+n21	Twenty-one.
+n22	Twenty-two.
+n23	Twenty-three.
+n24	Twenty-four.
+n25	Twenty-five.
+n26	Twenty-six.
+n27	Twenty-seven.
+n28	Twenty-eight.
+n29	Twenty-nine.
+n30	Thirty.
+n31	Thirty-one.
+n32	Thirty-two.
+n33	Thirty-three.
+n34	Thirty-four.
+n35	Thirty-five.
+n36	Thirty-six.
+n37	Thirty-seven.
+n38	Thirty-eight.
+n39	Thirty-nine.
+n40	Forty.
+n41	Forty-one.
+n42	Forty-two.
+n43	Forty-three.
+n44	Forty-four.
+n45	Forty-five.
+n46	Forty-six.
+n47	Forty-seven.
+n48	Forty-eight.
+n49	Forty-nine.
+n50	Fifty.
+n51	Fifty-one.
+n52	Fifty-two.
+n53	Fifty-three.
+n54	Fifty-four.
+n55	Fifty-five.
+n56	Fifty-six.
+n57	Fifty-seven.
+n58	Fifty-eight.
+n59	Fifty-nine.
+w_timer	Timer.
+w_minute	minute.
+w_minutes	minutes.
+w_second	second.
+w_seconds	seconds.
+w_hour	hour.
+w_hours	hours.
+w_percent	percent.
+w_and	and
+w_its	It's
+w_oclock	o'clock.
+w_left	left.
+n60	Sixty.
+n70	Seventy.
+n80	Eighty.
+n90	Ninety.
+n100	One hundred.
+w_hundred	hundred.
+w_thousand	thousand.
+w_point	point
+w_half	half.
+w_a_quarter	a quarter.
+w_am	A M.
+w_pm	P M.
+w_oh	oh
+w_noon	noon.
+w_midnight	midnight.
+w_quarter_past	quarter past
+w_half_past	half past
+w_quarter_to	quarter to
+w_today	today.
+w_tomorrow	tomorrow.
+w_tonight	tonight.
+w_yesterday	yesterday.
+w_this_morning	this morning.
+w_this_afternoon	this afternoon.
+w_this_evening	this evening.
+d_monday	Monday.
+d_tuesday	Tuesday.
+d_wednesday	Wednesday.
+d_thursday	Thursday.
+d_friday	Friday.
+d_saturday	Saturday.
+d_sunday	Sunday.
+m_january	January.
+m_february	February.
+m_march	March.
+m_april	April.
+m_may	May.
+m_june	June.
+m_july	July.
+m_august	August.
+m_september	September.
+m_october	October.
+m_november	November.
+m_december	December.
+o01	the first.
+o02	the second.
+o03	the third.
+o04	the fourth.
+o05	the fifth.
+o06	the sixth.
+o07	the seventh.
+o08	the eighth.
+o09	the ninth.
+o10	the tenth.
+o11	the eleventh.
+o12	the twelfth.
+o13	the thirteenth.
+o14	the fourteenth.
+o15	the fifteenth.
+o16	the sixteenth.
+o17	the seventeenth.
+o18	the eighteenth.
+o19	the nineteenth.
+o20	the twentieth.
+o21	the twenty-first.
+o22	the twenty-second.
+o23	the twenty-third.
+o24	the twenty-fourth.
+o25	the twenty-fifth.
+o26	the twenty-sixth.
+o27	the twenty-seventh.
+o28	the twenty-eighth.
+o29	the twenty-ninth.
+o30	the thirtieth.
+o31	the thirty-first.
+wx_weather_is	The weather is
+wx_degrees	degrees.
+wx_fahrenheit	Fahrenheit.
+wx_celsius	Celsius.
+wx_sunny	sunny.
+wx_cloudy	cloudy.
+wx_rainy	rainy.
+wx_snowy	snowy.
+wx_windy	windy.
+wx_stormy	stormy.
+wx_foggy	foggy.
+wx_clear	clear.
+wx_hot	hot.
+wx_warm	warm.
+wx_cold	cold.
+wx_high_of	with a high of
+wx_low_of	and a low of
+wx_chance_of_rain	chance of rain.
+c_message	message.
+c_messages	messages.
+c_email	email.
+c_emails	emails.
+c_agent	agent.
+c_agents	agents.
+c_task	task.
+c_tasks	tasks.
+c_pull_request	pull request.
+c_pull_requests	pull requests.
+c_meeting	meeting.
+c_meetings	meetings.
+c_notification	notification.
+c_notifications	notifications.
+c_build	build.
+c_builds	builds.
+c_test	test.
+c_tests	tests.
+c_error	error.
+c_errors	errors.
+c_reminder	reminder.
+c_reminders	reminders.
+k_you_have	You have
+k_there_is	There is
+k_there_are	There are
+k_no	no
+k_new	new
+k_more	more
+k_in	in
+k_at	at
+k_on	on
+k_for	for
+k_until	until
+k_is	is
+k_are	are
+k_the	the
+k_your	your
+k_next	next
+k_now	now.
+k_almost	almost
+k_remaining	remaining.
+k_done	done.
+k_failed	failed.
+k_passed	passed.
+k_ready	ready.
+k_running	running.
+k_started	started.
+k_finished	finished.
+k_waiting	waiting.
+p01_on_it	On it.
+p02_nice	Nice!
+p03_thinking	Hmm, let me think.
+p04_oops	Oops.
+p05_got_it	Got it.
+p06_one_sec	One sec.
+p07_all_done	All done!
+p08_uh_oh	Uh oh.
+p09_welcome_back	Welcome back!
+p10_good_morning	Good morning!
+p11_good_night	Good night. Sleep well.
+p12_need_you	Hey, I need you for a second.
