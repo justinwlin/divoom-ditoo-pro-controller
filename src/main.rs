@@ -193,6 +193,21 @@ enum Command {
     action: VolumeCommand
   },
 
+  /// Show a small widget with built-in 3x5 text (no font library)
+  Widget {
+    #[command(subcommand)]
+    kind: WidgetCommand
+  },
+
+  /// Show an animation or image from the art folder by name
+  Art {
+    /// Art folder (default: $DITOO_ART, then ./art)
+    #[arg(long, global = true)]
+    art: Option<std::path::PathBuf>,
+    #[command(subcommand)]
+    action: ArtCommand
+  },
+
   /// Play sounds from an SD card soundpack by name (see docs/sd-card-sound.md)
   Sound {
     /// Soundpack folder with manifest.json (default: $DITOO_SOUNDPACK, then ./soundpack)
@@ -258,6 +273,57 @@ enum BluetoothCommand {
 }
 
 #[derive(Subcommand, Debug)]
+enum WidgetCommand {
+  /// Two lines of text, up to 4 letters each (for example DONE / TEST)
+  Card {
+    top: String,
+    #[arg(default_value = "")]
+    bottom: String,
+    #[arg(long, default_value = "white")]
+    color: String,
+    /// Color of the second line (default: the same as --color)
+    #[arg(long)]
+    bottom_color: Option<String>,
+    #[arg(long, default_value = "black")]
+    bg_color: String
+  },
+  /// A label above a progress bar
+  Gauge {
+    label: String,
+    value: u32,
+    #[arg(long, default_value_t = 100)]
+    max: u32,
+    #[arg(long, default_value = "lime")]
+    color: String
+  },
+  /// A small label above a value (for example TEMP / 72F)
+  Metric {
+    label: String,
+    value: String,
+    #[arg(long, default_value = "cyan")]
+    color: String
+  },
+  /// A battery with a fill bar and the percentage
+  Battery {
+    percent: u8,
+    #[arg(long)]
+    charging: bool
+  },
+}
+
+#[derive(Subcommand, Debug)]
+enum ArtCommand {
+  /// List the names in the art folder
+  List,
+  /// Show one by name
+  Show {
+    // Not `name`: that is the id of the global --name option.
+    #[arg(value_name = "NAME")]
+    art_name: String
+  },
+}
+
+#[derive(Subcommand, Debug)]
 enum SoundCommand {
   /// List the sounds in the pack
   List {
@@ -271,7 +337,11 @@ enum SoundCommand {
     names: Vec<String>
   },
   /// Start a sound in repeat mode and leave it on
-  Loop { name: String },
+  Loop {
+    // Not `name`: that is the id of the global --name option.
+    #[arg(value_name = "NAME")]
+    sound_name: String
+  },
   /// Pause playback
   Stop,
   /// Print the card playback status as JSON
@@ -722,6 +792,53 @@ async fn run(args: Args) -> Result<(), Box<dyn Error>> {
       };
       send_set_box_mode(mac, payload).await?
     }
+    Command::Widget { kind } => {
+      use divoom_ditoo_pro_controller::canvas;
+      let canvas = match kind {
+        WidgetCommand::Card { top, bottom, color, bottom_color, bg_color } => {
+          let top_color = parse_color(&color)?;
+          let bottom_color = bottom_color.as_deref().map(parse_color).transpose()?.unwrap_or(top_color);
+          canvas::card(&top, &bottom, top_color, bottom_color, parse_color(&bg_color)?)
+        }
+        WidgetCommand::Gauge { label, value, max, color } => canvas::gauge(&label, value, max, parse_color(&color)?),
+        WidgetCommand::Metric { label, value, color } => canvas::metric(&label, &value, parse_color(&color)?),
+        WidgetCommand::Battery { percent, charging } => canvas::battery(percent, charging),
+      };
+      let mac = resolve_device(args.device).await?;
+      divoom_ditoo_pro_controller::send_canvas(mac, &canvas).await?
+    }
+    Command::Art { art, action } => {
+      let dir = art
+        .or_else(|| std::env::var_os("DITOO_ART").map(std::path::PathBuf::from))
+        .unwrap_or_else(|| std::path::PathBuf::from("art"));
+      let mut files = std::fs::read_dir(&dir)
+        .map_err(|e| format!("Art folder {}: {e}. Use --art DIR or set DITOO_ART.", dir.display()))?
+        .filter_map(|entry| entry.ok().map(|e| e.path()))
+        .filter(|p| matches!(p.extension().and_then(|e| e.to_str()), Some("divoom16" | "gif" | "png")))
+        .collect::<Vec<_>>();
+      files.sort();
+      match action {
+        ArtCommand::List => {
+          for path in &files {
+            if let Some(name) = path.file_stem().and_then(|s| s.to_str()) {
+              println!("{name}");
+            }
+          }
+        }
+        ArtCommand::Show { art_name: name } => {
+          let path = files
+            .iter()
+            .find(|p| p.file_stem().and_then(|s| s.to_str()) == Some(name.as_str()))
+            .ok_or_else(|| format!("No art named \"{name}\" in {}. Use `art list`.", dir.display()))?;
+          let mac = resolve_device(args.device).await?;
+          if path.extension().and_then(|e| e.to_str()) == Some("divoom16") {
+            send_divoom_animation(mac, &mut File::open(path)?).await?
+          } else {
+            send_image(mac, &path.to_string_lossy()).await?
+          }
+        }
+      }
+    }
     Command::Sound { pack, action } => {
       use divoom_ditoo_pro_controller::sound;
       let dir = sound::pack_dir(pack);
@@ -737,9 +854,9 @@ async fn run(args: Args) -> Result<(), Box<dyn Error>> {
           let mac = resolve_device(args.device).await?;
           sound::play(mac, &sounds).await?
         }
-        SoundCommand::Loop { name } => {
+        SoundCommand::Loop { sound_name } => {
           let pack = sound::Pack::load(&dir)?;
-          let sound = pack.find(&name)?.clone();
+          let sound = pack.find(&sound_name)?.clone();
           let mac = resolve_device(args.device).await?;
           sound::start_loop(mac, &sound).await?
         }
@@ -852,6 +969,20 @@ mod cli_tests {
       assert!(Args::try_parse_from(["divoom", "firmware-update", "firmware/306007.MVA", "--usb-queue-depth", depth]).is_err());
     }
     Ok(())
+  }
+
+  #[test]
+  fn positional_names_do_not_set_the_device_name_filter() {
+    for line in [
+      vec!["divoom-ditoo-pro-controller", "art", "show", "fire"],
+      vec!["divoom-ditoo-pro-controller", "sound", "loop", "a_rain"],
+      vec!["divoom-ditoo-pro-controller", "sound", "play", "j_done"],
+    ] {
+      let args = Args::try_parse_from(line).unwrap();
+      assert_eq!(args.name, None);
+    }
+    let args = Args::try_parse_from(["divoom-ditoo-pro-controller", "art", "show", "fire", "--name", "Kitchen"]).unwrap();
+    assert_eq!(args.name.as_deref(), Some("Kitchen"));
   }
 
   #[test]

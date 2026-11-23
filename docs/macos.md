@@ -56,6 +56,8 @@ One Ditoo Pro with stock firmware 306007, from macOS on Apple silicon:
 | `static-text "Hi"` | 2 packets acknowledged. |
 | `scrolling-text "Hello from the Mac"` | 196 frames acknowledged in about 80 seconds. |
 | `sound play`, `sound status` | A jingle, a voice line and a 4-word sequence played and then stopped. |
+| `widget card`, `gauge`, `metric`, `battery` | Each was acknowledged. |
+| `art show NAME` | An 8-frame animation was acknowledged and shown. |
 
 Not tested on macOS: video, firmware update, Lua commands, and USB.
 

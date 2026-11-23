@@ -207,6 +207,19 @@ divoom-ditoo-pro-controller convert to-divoom16 ./images/witch.gif ./out.divoom1
 divoom-ditoo-pro-controller debug-image ./images/witch.divoom16
 ```
 
+# Widgets and art
+
+Small text with a built-in 3x5 font (no font library), and animations by name from the [art](art/README.md) folder:
+
+```bash
+divoom-ditoo-pro-controller widget card DONE TEST --color lime
+divoom-ditoo-pro-controller widget gauge CPU 75
+divoom-ditoo-pro-controller widget metric TEMP 72F
+divoom-ditoo-pro-controller widget battery 64 --charging
+divoom-ditoo-pro-controller art list
+divoom-ditoo-pro-controller art show fire
+```
+
 # SD card sounds
 
 The [soundpack](soundpack/README.md) has 257 short sounds for the microSD slot (voice lines, a number and word kit,

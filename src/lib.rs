@@ -49,6 +49,7 @@ pub mod lua;
 pub mod lua_tools;
 pub mod lua_bundle;
 pub mod sound;
+pub mod canvas;
 pub use transport::{Transport, selected_device_name, selected_transport, with_device_name, with_transport, with_usb_port};
 mod usb_control;
 use transport::DeviceConnection;
@@ -345,6 +346,14 @@ pub async fn send_static_text(
   }
   conn.disconnect().await?;
   Ok(())
+}
+
+/// Show a 16x16 canvas (widgets, small text) as a still image.
+pub async fn send_canvas(mac_address: Address, canvas: &canvas::Canvas) -> Result<(), Box<dyn Error>> {
+  let animation = DivoomAnimation::from_image(canvas.to_image())?;
+  let mut buf = Vec::new();
+  animation.save_to_divoom_format(&mut buf)?;
+  send_divoom_animation(mac_address, &mut buf.as_slice()).await
 }
 
 pub async fn send_image(
